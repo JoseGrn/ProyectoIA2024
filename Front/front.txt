@@ -1,0 +1,10 @@
+Para correr el front deben de poner en el cmd:
+cd rottentomatoesgt
+npm start
+
+#Documentacion bootstrap
+https://getbootstrap.com/docs/5.2/getting-started/introduction/  
+
+#PAQUETES
+npm install react-router-dom
+npm install bootstrap
