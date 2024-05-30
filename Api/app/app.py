@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 
-from movies import obtener_peliculas
+from movies import do_review, obtener_peliculas
 from login import crear_user, obtener_user, obtener_usuarios
 from flask_cors import CORS
 
@@ -41,6 +41,21 @@ def login():
 def get_users():
     usuarios = obtener_usuarios()
     return usuarios
+
+@app.route('/api/review', methods=["POST"])
+def review():
+    datos = request.get_json()
+    
+    userid = datos.get('userid')
+    movieid = datos.get('movieid')
+    score = datos.get('score')
+    comment = datos.get('comment')
+
+    success = do_review(userid, movieid, score, comment)
+    if success:
+        return jsonify({"Mensaje": "Review creada correctamente"}), 201
+    else:
+        return jsonify({"error": "Server error"}), 500
 
 @app.route('/api/allmovies', methods=["GET"])
 def get_movies():
