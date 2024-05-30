@@ -12,6 +12,7 @@ import nltk
 
 nltk.download('stopwords')
 nltk.download('punkt')
+nltk.download('wordnet')
 
 
 def clean_review_score(value):
@@ -75,8 +76,13 @@ class DataNormalizer:
                  'audience_status', 'tomatometer_top_critics_count', 'tomatometer_fresh_critics_count',
                  'tomatometer_rotten_critics_count'], axis=1, inplace=True)
 
-        df['original_release_date'] = pd.to_datetime(df['original_release_date']).map(pd.Timestamp.toordinal)
-        df['streaming_release_date'] = pd.to_datetime(df['streaming_release_date']).map(pd.Timestamp.toordinal)
+        df['original_release_date'] = pd.to_datetime(df['original_release_date'], errors='coerce')
+        df['streaming_release_date'] = pd.to_datetime(df['streaming_release_date'], errors='coerce')
+
+        df['original_release_date'] = df['original_release_date'].apply(
+            lambda x: x.toordinal() if pd.notnull(x) else np.nan)
+        df['streaming_release_date'] = df['streaming_release_date'].apply(
+            lambda x: x.toordinal() if pd.notnull(x) else np.nan)
 
         imputer = KNNImputer(n_neighbors=5)
         df[['runtime']] = imputer.fit_transform(df[['runtime']])
@@ -86,7 +92,7 @@ class DataNormalizer:
     def clean_reviews_data(self, df):
         df = fill_missing_values(df, 'critic_name', 'Unknown Critic')
         df['review_score'] = df['review_score'].apply(clean_review_score)
-        df['review_score'].fillna(df['review_score'].mean(), inplace=True)
+        df['review_score'] = df['review_score'].fillna(df['review_score'].mean())
         return df
 
     def encode_categorical(self, df):
