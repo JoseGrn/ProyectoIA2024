@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 
@@ -16,12 +16,19 @@ const ListItem = ({ data }) => {
 
 // Componente de listado
 const ListaPeliculas = () => {
-  const dataList = [
-    { id: 1, name: 'Cars', duration: 60, year: 2010 },
-    { id: 2, name: 'Los increibles 2', duration: 34, year: 2009 },
-    { id: 3, name: 'Mulan', duration: 23, year: 2008 },
-    { id: 4, name: 'The idea of you', duration: 45, year: 1997 },
-  ];
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/api/allmovies')
+    .then((response) => response.json)
+    .then((data) => {
+        console.log(data);
+        setMovies(data);
+    })
+    .catch((err) => {
+        console.log("Error API")
+    });
+  }, []);
 
   return (
     <Container className="mt-5">
@@ -36,7 +43,7 @@ const ListaPeliculas = () => {
           </tr>
         </thead>
         <tbody>
-          {dataList.map((item) => (
+          {movies.map((item) => (
             <ListItem key={item.id} data={item} />
           ))}
         </tbody>
