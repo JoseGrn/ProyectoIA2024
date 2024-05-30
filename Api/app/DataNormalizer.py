@@ -48,13 +48,15 @@ def fill_missing_values(df, column, fill_value):
     return df
 
 
-
 class DataNormalizer:
     def __init__(self, review_file):
         self.review_file = review_file
         self.label_encoders = {}
         self.numerical_columns = ['review_score']
         self.categorical_columns = ['review_type', 'critic_name']
+        self.vocabulario = {}
+        self.stop_words = set(stopwords.words('english'))
+        self.lemmatizer = WordNetLemmatizer()
 
     def load_and_clean_reviews_data(self):
         reviews_df = pd.read_csv(self.review_file)
@@ -75,22 +77,19 @@ class DataNormalizer:
         return df
 
     def preprocess_reviews(self, df):
-        stop_words = set(stopwords.words('english'))
-        lemmatizer = WordNetLemmatizer()
+        df['review_content'] = df['review_content'].apply(lambda x: self.clean_text(x))
 
-        df['review_content'] = df['review_content'].apply(lambda x: self.clean_text(x, stop_words, lemmatizer))
-
-        comentarios_preprocesados = [self.clean_text(comentario, stop_words, lemmatizer) for comentario in df['review_content'].astype(str)]
+        comentarios_preprocesados = [self.clean_text(comentario) for comentario in df['review_content'].astype(str)]
 
         # Construir vocabulario
         vocabulario = {word for comentario in comentarios_preprocesados for word in comentario.split()}
-        vocabulario = {word: idx for idx, word in enumerate(vocabulario)}
+        self.vocabulario = {word: idx for idx, word in enumerate(vocabulario)}
 
         # Convertir comentarios a números
         def text_to_numbers(comentario, vocabulario):
             return [vocabulario[word] for word in comentario.split() if word in vocabulario]
 
-        comentarios_numericos = [text_to_numbers(comentario, vocabulario) for comentario in comentarios_preprocesados]
+        comentarios_numericos = [text_to_numbers(comentario, self.vocabulario) for comentario in comentarios_preprocesados]
 
         # Convertir a vectores de longitud fija (por ejemplo, con padding o truncamiento)
         max_length = max(len(comentario) for comentario in comentarios_numericos)
@@ -102,11 +101,11 @@ class DataNormalizer:
 
         return df, comentarios_vectores
 
-    def clean_text(self, text, stop_words, lemmatizer):
+    def clean_text(self, text):
         if isinstance(text, str):
             tokens = word_tokenize(text)
             tokens = [word.lower() for word in tokens if word.isalpha()]
-            tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
+            tokens = [self.lemmatizer.lemmatize(word) for word in tokens if word not in self.stop_words]
             clean_text = ' '.join(tokens)
             return clean_text
         else:
@@ -121,3 +120,10 @@ class DataNormalizer:
         y = df['review_type'].values
         return X, y
 
+    def preprocess_single_review(self, review_text):
+        clean_review = self.clean_text(review_text)
+        review_numbers = [self.vocabulario.get(word, 0) for word in clean_review.split()]
+        max_length = max(len(review_numbers), 256)
+        review_vector = np.zeros((1, max_length), dtype=int)
+        review_vector[0, :len(review_numbers)] = review_numbers[:max_length]
+        return review_vector
