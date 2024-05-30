@@ -15,7 +15,7 @@ def obtener_usuarios():
     cursor.close()
     conn.close()
 
-    data = [{'id': row[0], 'name': row[1]} for row in usuarios]
+    data = [{'usuario': row[0], 'contraseña': row[1]} for row in usuarios]
 
     return jsonify(data)
 
@@ -27,20 +27,20 @@ def obtener_user(user, password):
         'Trusted_Connection=yes;'
     )
     cursor = conn.cursor()
-    query = f"""
-    SELECT CASE 
-        WHEN EXISTS (SELECT 1 FROM tb_user WHERE [user] = '{user}' AND [password] = '{password}') 
-        THEN CAST(1 AS BIT) 
-        ELSE CAST(0 AS BIT) 
-    END AS Existe
-    """
+    query = f"""SELECT userid FROM tb_user WHERE [user] = '{user}' AND [password] = '{password}'"""
     cursor.execute(query)
     resultado = cursor.fetchone()
     conn.commit()
     cursor.close()
     conn.close()
 
-    existe = resultado[0] if resultado else 0
+    if(resultado==None):
+        return jsonify("No existe")
+
+    for row in resultado:
+        print(row)
+
+    existe = [{'id': resultado[0]}]
 
     return jsonify(existe)
 

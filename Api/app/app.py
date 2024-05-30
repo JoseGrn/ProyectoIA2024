@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 
 from movies import obtener_peliculas
 from login import crear_user, obtener_user, obtener_usuarios
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def post_new_user():
     else:
         return jsonify({"error": "Server error"}), 500
 
-@app.route('/api/login', methods=["GET"])
+@app.route('/api/login', methods=["POST"])
 def login():
     datos = request.get_json()
 
