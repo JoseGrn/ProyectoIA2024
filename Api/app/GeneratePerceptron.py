@@ -2,11 +2,9 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 import matplotlib.pyplot as plt
-from DataNormalizer import dataNormalizer
+from DataNormalizer import DataNormalizer
 
-
-
-vocab_size = 460000
+vocab_size = 14000
 
 model = keras.Sequential()
 model.add(keras.layers.Embedding(vocab_size, 16))
@@ -20,27 +18,24 @@ model.compile(optimizer='adam',
               loss='binary_crossentropy',
               metrics=['acc'])
 
-data_normalizer = dataNormalizer()
-data_normalizer._init_('C:/Users/josed/Downloads/rotten_tomatoes_critic_reviews.csv')
+data_normalizer = DataNormalizer('C:/Users/Admin TI/Downloads/rotten_tomatoes_critic_reviews_p.csv')
 X, y = data_normalizer.prepare_data()
 
+# Asegúrate de que todos los valores en X estén en el rango [0, vocab_size-1]
+X = np.clip(X, 0, vocab_size - 1)
+
+print(X[0])
 print(len(X))
-x_val = X[:460000]
-partial_x_train = X[460000:]
+x_val = X[:14000]
+partial_x_train = X[14000:]
 print(len(y))
-y_val = y[:460000]
-partial_y_train = y[460000:]
+y_val = y[:14000]
+partial_y_train = y[14000:]
 
 print(x_val[0])
 print(x_val)
 print(y_val[0])
 print(y_val)
-
-# x_val = x_val.astype(np.float32)
-# partial_x_train = partial_x_train.astype(np.float32)
-
-# y_val = y_val.astype(np.float32)
-# partial_y_train = partial_y_train.astype(np.float32)
 
 print(len(x_val))
 print(len(y_val))
@@ -49,43 +44,7 @@ print(len(partial_y_train))
 
 history = model.fit(partial_x_train,
                     partial_y_train,
-                    epochs=20,
+                    epochs=30,
                     batch_size=512,
                     validation_data=(x_val, y_val),
                     verbose=1)
-
-# results = model.evaluate(test_data, test_labels)
-
-# print(results)
-
-# history_dict = history.history
-# history_dict.keys()
-
-# acc = history_dict['acc']
-# val_acc = history_dict['val_acc']
-# loss = history_dict['loss']
-# val_loss = history_dict['val_loss']
-
-# epochs = range(1, len(acc) + 1)
-
-# # "bo" is for "blue dot"
-# plt.plot(epochs, loss, 'bo', label='Training loss')
-# # b is for "solid blue line"
-# plt.plot(epochs, val_loss, 'b', label='Validation loss')
-# plt.title('Training and validation loss')
-# plt.xlabel('Epochs')
-# plt.ylabel('Loss')
-# plt.legend()
-
-# plt.show()
-
-# plt.clf()   # clear figure
-
-# plt.plot(epochs, acc, 'bo', label='Training acc')
-# plt.plot(epochs, val_acc, 'b', label='Validation acc')
-# plt.title('Training and validation accuracy')
-# plt.xlabel('Epochs')
-# plt.ylabel('Accuracy')
-# plt.legend()
-
-# plt.show()
