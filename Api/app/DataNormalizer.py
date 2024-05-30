@@ -48,13 +48,17 @@ def fill_missing_values(df, column, fill_value):
     return df
 
 
-class dataNormalizer:
-    def _init_(self, review_file):
+class DataNormalizer:
+    def __init__(self, review_file):
         self.review_file = review_file
         self.label_encoders = {}
         self.scaler = StandardScaler()
         self.numerical_columns = ['review_score']
         self.categorical_columns = ['review_type', 'critic_name']
+        
+    # Convertir comentarios a números
+    def text_to_numbers(comentario, vocabulario):
+        return [vocabulario[word] for word in comentario.split() if word in vocabulario]
 
     def load_and_clean_reviews_data(self):
         reviews_df = pd.read_csv(self.review_file)
@@ -89,10 +93,6 @@ class dataNormalizer:
         # Construir vocabulario
         vocabulario = {word for comentario in comentarios_preprocesados for word in comentario.split()}
         vocabulario = {word: idx for idx, word in enumerate(vocabulario)}
-
-        # Convertir comentarios a números
-        def text_to_numbers(comentario, vocabulario):
-            return [vocabulario[word] for word in comentario.split() if word in vocabulario]
 
         comentarios_numericos = [text_to_numbers(comentario, vocabulario) for comentario in comentarios_preprocesados]
 
@@ -152,17 +152,17 @@ class dataNormalizer:
 
 
 # Instancia y uso de la clase DataNormalizer
-# data_normalizer = DataNormalizer('C:/Users/Admin TI/Downloads/rotten_tomatoes_critic_reviews_p.csv')
-# X, y = data_normalizer.prepare_data()
+data_normalizer = DataNormalizer('C:/Users/Admin TI/Downloads/rotten_tomatoes_critic_reviews_p.csv')
+X, y = data_normalizer.prepare_data()
 
 # print(X)
 # print(y)
 
-# # Crear y entrenar el perceptrón
-# input_size = X.shape[1]
-# perceptron = Perceptron(input_size)
-# perceptron.train(X, y)
+# Crear y entrenar el perceptrón
+input_size = X.shape[1]
+perceptron = Perceptron(input_size)
+perceptron.train(X, y)
 
-# # Probar el perceptrón con algunos ejemplos
-# test_inputs = np.array([X[0], X[1]])  # Usa algunos datos de prueba
-# print("Predicciones:", [perceptron.predict(x) for x in test_inputs])
+# Probar el perceptrón con algunos ejemplos
+test_inputs = np.array([X[0], X[1]])  # Usa algunos datos de prueba
+print("Predicciones:", [perceptron.predict(x) for x in test_inputs])
