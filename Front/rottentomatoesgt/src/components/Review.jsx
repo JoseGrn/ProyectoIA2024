@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Review = () => {
-  const [selectedMovie, setSelectedMovie] = useState('');
   const [rating, setRating] = useState('');
   const [review, setReview] = useState('');
-
-  const movies = [
-    { id: 1, name: 'The Shawshank Redemption' },
-    { id: 2, name: 'The Godfather' },
-    { id: 3, name: 'The Dark Knight' },
-    // Agrega más películas según sea necesario
-  ];
-
-  const handleMovieChange = (e) => {
-    setSelectedMovie(e.target.value);
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { userId, movie } = location.state || {};
 
   const handleRatingChange = (e) => {
     setRating(e.target.value);
@@ -28,11 +20,27 @@ const Review = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Lógica para enviar la información del formulario
-    console.log({
-      movie: selectedMovie,
-      rating: rating,
-      review: review,
-    });
+    fetch('http://127.0.0.1:5000/api/login', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+        body: JSON.stringify({ 
+          userid: userId,
+          movieid: movie.id,
+          score: rating,
+          comment: review,
+         }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 200)
+          navigate('/listaPeliculas', {state:{userId: userId}});
+        else {
+          console.error('Error en la autenticación');
+        }
+      })
+      .catch(error => console.error('Error:', error)); 
     // Puedes enviar esta información a tu backend aquí
   };
 
@@ -42,15 +50,8 @@ const Review = () => {
         <Col xs={12} md={6} lg={4}>
           <h2 className="text-center mb-4">Valoración de Películas</h2>
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formMovieSelect">
-              <Form.Label>Selecciona una Película</Form.Label>
-              <Form.Control as="select" value={selectedMovie} onChange={handleMovieChange}>
-                <option value="">Selecciona una película</option>
-                {movies.map(movie => (
-                  <option key={movie.id} value={movie.name}>{movie.name}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
+
+            <Form.Label>{movie.titulo}</Form.Label>
 
             <Form.Group controlId="formRating">
               <Form.Label className="mt-3">Valoración</Form.Label>

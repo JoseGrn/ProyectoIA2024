@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Review from './components/Review';
 import ListaPeliculas from './components/ListaPeliculas';
+import ReviewMovie from './components/ReviewMovie.jsx';
 import Comentarios from './components/Comentarios';
 import Barra from './components/Barra';
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/review" element={<Review />} />
           <Route path="/listapeliculas" element={<ListaPeliculas />} />
           <Route path="/comentarios" element={<Comentarios />} />
+          <Route path="/reviewMovie" element={<ReviewMovie />} />
         </Routes>
       </div>
     </Router>

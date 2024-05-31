@@ -44,9 +44,9 @@ const Register = () => {
     .then(response => response.json())
     .then(data => {
       if (data.status === 200)
-        navigate('/listaPeliculas');
+        navigate('/login');
       else {
-        console.error('Error en la autenticación');
+        console.error('Error en el registro');
       }
     })
     .catch(error => console.error('Error:', error)); 
