@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 
 from GeneratePerceptron import SentimentModel
-from movies import do_review, obtener_peliculas
+from movies import commentByMovie, commentByUser, do_review, getallreviews, obtener_peliculas
 from login import crear_user, obtener_user, obtener_usuarios
 from flask_cors import CORS
 
@@ -55,24 +55,6 @@ def review():
     score = datos.get('score')
     comment = datos.get('comment')
 
-    nuevo_review = "This movie was absolutely fantastic! I loved every moment of it."
-    print(sentiment_model.predict_review(nuevo_review))
-
-    review_1 = "The plot was quite boring and the characters were not well-developed."
-    print(sentiment_model.predict_review(review_1))
-
-    review_2 = "An excellent film with stunning visuals and a captivating storyline."
-    print(sentiment_model.predict_review(review_2))
-
-    review_3 = "It was a waste of time. I wouldn't recommend it to anyone."
-    print(sentiment_model.predict_review(review_3))
-
-    review_4 = "A masterpiece! The director did an incredible job with this movie."
-    print(sentiment_model.predict_review(review_4))
-
-    review_5 = "The movie had some good moments, but overall it fell short of expectations."
-    print(sentiment_model.predict_review(review_5))
-
     prediccion = sentiment_model.predict_review(comment)
 
     success = do_review(userid, movieid, score, comment, prediccion)
@@ -81,6 +63,31 @@ def review():
         return jsonify({"Mensaje": "Review creada correctamente"}), 201
     else:
         return jsonify({"error": "Server error"}), 500
+    
+@app.route('/api/reviewbyuser', methods=["POST"])
+def reviewByUser():
+    datos = request.get_json()
+    
+    userid = datos.get('userid')
+
+    comentarios = commentByUser(userid)
+    
+    return comentarios
+
+@app.route('/api/reviewbymovie', methods=["POST"])
+def reviewByMovie():
+    datos = request.get_json()
+    
+    movieid = datos.get('movieid')
+
+    comentarios = commentByMovie(movieid)
+    
+    return comentarios
+
+@app.route('/api/allreviews', methods=["GET"])
+def allreviews():
+    comentarios = getallreviews()
+    return comentarios
 
 @app.route('/api/allmovies', methods=["GET"])
 def get_movies():
