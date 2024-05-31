@@ -31,7 +31,7 @@ const Login = () => {
       .then(response => response.json())
       .then(data => {
         if (data.status === 200)
-          navigate('/listaPeliculas');
+          navigate('/listaPeliculas', {state:{userId: data.id}});
         else {
           console.error('Error en la autenticación');
         }

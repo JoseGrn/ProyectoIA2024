@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Componente para cada fila
 const ListItem = ({ data }) => {
@@ -17,6 +18,9 @@ const ListItem = ({ data }) => {
 // Componente de listado
 const ListaPeliculas = () => {
   const [movies, setMovies] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = location.state || {};
 
   useEffect(() => {
     fetch('http://127.0.0.1:5000/api/allmovies')
@@ -30,6 +34,10 @@ const ListaPeliculas = () => {
     });
   }, []);
 
+  const handleSelectMovie = (movie) => {
+    navigate(`/review`, { state: { movie, id } });
+  };
+
   return (
     <Container className="mt-5">
       <h2>Listado de Películas</h2>
@@ -38,13 +46,14 @@ const ListaPeliculas = () => {
           <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Duracion</th>
+            <th>Duración</th>
             <th>Año</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {movies.map((item) => (
-            <ListItem key={item.id} data={item} />
+            <ListItem key={item.id} data={item} onSelect={handleSelectMovie} />
           ))}
         </tbody>
       </Table>
