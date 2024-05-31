@@ -4,7 +4,7 @@ import pyodbc
 def obtener_peliculas():
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
@@ -22,7 +22,7 @@ def obtener_peliculas():
 def do_review(userid, movieid, score, comment, prediccion):
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
@@ -44,7 +44,7 @@ def do_review(userid, movieid, score, comment, prediccion):
 def commentByUser(userid):
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
@@ -64,7 +64,7 @@ def commentByUser(userid):
 def commentByMovie(movieid):
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
@@ -85,7 +85,7 @@ def commentByMovie(movieid):
 def getallreviews():
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )

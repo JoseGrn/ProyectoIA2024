@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 sentiment_model = SentimentModel(38000)
-history = sentiment_model.train('C:/Users/josed/Downloads/rotten_tomatoes_critic_reviews_p.csv')
+history = sentiment_model.train('D:/1er. Ciclo 2024/1. Inteligencia Artificial/Proyecto/rotten_tomatoes_critic_reviews_p.csv')
 
 @app.route('/')
 def hello_world():

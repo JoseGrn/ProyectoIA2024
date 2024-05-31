@@ -4,7 +4,7 @@ import pyodbc
 def obtener_usuarios():
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
@@ -22,7 +22,7 @@ def obtener_usuarios():
 def obtener_user(user, password):
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
@@ -47,7 +47,7 @@ def obtener_user(user, password):
 def crear_user(name, lastname, user, password, level):
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
+        'SERVER=ANDREAGZ;'
         'DATABASE=MovieReviewDB;'
         'Trusted_Connection=yes;'
     )
