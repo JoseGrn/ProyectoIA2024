@@ -6,6 +6,7 @@ from login import crear_user, obtener_user, obtener_usuarios
 from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 sentiment_model = SentimentModel(38000)
 history = sentiment_model.train('C:/Users/josed/Downloads/rotten_tomatoes_critic_reviews_p.csv')
