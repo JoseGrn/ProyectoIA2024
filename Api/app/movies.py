@@ -19,7 +19,7 @@ def obtener_peliculas():
 
     return jsonify(data)
 
-def do_review(userid, movieid, score, comment):
+def do_review(userid, movieid, score, comment, prediccion):
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
         'SERVER=LAPTOP-58K8SPAP\\SQLEXPRESS;'
@@ -27,10 +27,9 @@ def do_review(userid, movieid, score, comment):
         'Trusted_Connection=yes;'
     )
     cursor = conn.cursor()
-    tomatometer = "Fresh"
     query = f"""
             insert into tb_review([userid],[movieid],[score],[comment],[reviewdate],[tomatometer])
-            values({userid}, {movieid}, {score}, '{comment}', GETDATE(), '{tomatometer}')
+            values({userid}, {movieid}, {score}, '{comment}', GETDATE(), '{prediccion}')
             """
     
     try:
