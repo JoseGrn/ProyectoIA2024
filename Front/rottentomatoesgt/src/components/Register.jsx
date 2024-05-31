@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -40,7 +42,13 @@ const Register = () => {
        }),
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => {
+      if (data.status === 200)
+        navigate('/listaPeliculas');
+      else {
+        console.error('Error en la autenticación');
+      }
+    })
     .catch(error => console.error('Error:', error)); 
   };
 

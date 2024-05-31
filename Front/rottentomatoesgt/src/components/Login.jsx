@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [passwordW, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -27,7 +29,13 @@ const Login = () => {
          }),
       })
       .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data => {
+        if (data.status === 200)
+          navigate('/listaPeliculas');
+        else {
+          console.error('Error en la autenticación');
+        }
+      })
       .catch(error => console.error('Error:', error)); 
   };
 
