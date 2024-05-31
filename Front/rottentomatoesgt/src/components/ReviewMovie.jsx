@@ -10,15 +10,26 @@ const ReviewForm = ({ userId }) => {
 
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/reviewbymovie')
-    .then((response) => response.json)
-    .then((data) => {
-        console.log(data);
-        setReviews(data);
-    })
-    .catch((err) => {
-        console.log("Error API")
-    });
+    console.log(movie);
+    fetch('http://127.0.0.1:5000/api/reviewbymovie', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+        body: JSON.stringify({ 
+          movieid: movie.id,
+         }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if (data !== null)
+          setReviews(data);
+        else {
+          console.error('Error en la autenticación');
+        }
+      })
+      .catch(error => console.error('Error:', error));
   }, []);
 
   const handleRegreso = (e) => {
@@ -33,9 +44,9 @@ const ReviewForm = ({ userId }) => {
           <h3>Historial de Reseñas</h3>
           <ul>
             {reviews.map(review => (
-              <li key={review.id}>
-                <strong>Valoración: {review.rating}</strong><br />
-                <span>Reseña: {review.review}</span>
+              <li key={review.comment}>
+                <strong>Valoración: {review.tomatometer}</strong><br />
+                <span>Reseña: {review.comment}</span>
               </li>
             ))}
           </ul>

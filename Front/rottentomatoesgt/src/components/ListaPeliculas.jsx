@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 // Componente para cada fila
 const ListItem = ({ data, onSelectGenerateReview, onSelectViewReview }) => {
@@ -10,7 +11,7 @@ const ListItem = ({ data, onSelectGenerateReview, onSelectViewReview }) => {
       <td>{data.titulo}</td>
       <td>{data.duracion}</td>
       <td>{data.FechaEstreno}</td>
-      <td>{data.Genero}</td>
+      <td>{data.generos}</td>
       <td>
         <button onClick={() => onSelectGenerateReview(data)}>Generar Review</button>
         <button onClick={() => onSelectViewReview(data)}>Ver Review</button>
@@ -23,8 +24,7 @@ const ListItem = ({ data, onSelectGenerateReview, onSelectViewReview }) => {
 const ListaPeliculas = () => {
   const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { userId } = location.state || {};
+  const userId = Cookies.get('userId');
 
   useEffect(() => {
     fetch('http://127.0.0.1:5000/api/allmovies')

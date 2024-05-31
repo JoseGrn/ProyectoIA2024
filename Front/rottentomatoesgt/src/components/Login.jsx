@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ const Login = () => {
     event.preventDefault();
   
       fetch('http://127.0.0.1:5000/api/login', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -30,8 +31,11 @@ const Login = () => {
       })
       .then(response => response.json())
       .then(data => {
-        if (data.status === 200)
+        if (data[0].id > 0)
+        {
+          Cookies.set('userId', data[0].id);
           navigate('/listaPeliculas', {state:{userId: data.id}});
+        }
         else {
           console.error('Error en la autenticación');
         }

@@ -8,7 +8,7 @@ const Barra = () => {
         <Navbar.Brand href="/home">Rotten Tomatoes GT</Navbar.Brand>
         <Nav className="me-auto">
             <Nav.Link href="/ListaPeliculas">Lista Películas</Nav.Link>
-            <Nav.Link href="/ReviewMovie">Review Pelicula</Nav.Link>
+            <Nav.Link href="/comentarios">Mis Comentarios</Nav.Link>
         </Nav>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">

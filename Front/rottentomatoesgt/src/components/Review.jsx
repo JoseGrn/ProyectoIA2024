@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Review = () => {
   const [rating, setRating] = useState('');
   const [review, setReview] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { userId, movie } = location.state || {};
+  const { movie } = location.state || {};
+  const userId = Cookies.get('userId');
 
   const handleRatingChange = (e) => {
     setRating(e.target.value);
@@ -20,8 +22,8 @@ const Review = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Lógica para enviar la información del formulario
-    fetch('http://127.0.0.1:5000/api/login', {
-      method: 'GET',
+    fetch('http://127.0.0.1:5000/api/review', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -34,7 +36,8 @@ const Review = () => {
       })
       .then(response => response.json())
       .then(data => {
-        if (data.status === 200)
+        console.log(data)
+        if (data.Mensaje === "Review creada correctamente")
           navigate('/listaPeliculas', {state:{userId: userId}});
         else {
           console.error('Error en la autenticación');
